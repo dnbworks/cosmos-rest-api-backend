@@ -1,0 +1,53 @@
+php artisan tinker
+
+
+$user = new App\Models\User();
+$user->password = Hash::make('the-password-of-choice');
+$user->email = 'the-email@example.com';
+$user->name = 'My Name';
+$user->save();
+
+DB::table('users')->insert(['name'=>'Nsaako Dooyong','email'=>'dnb.nsaako@gmail.com','password'=>Hash::make('12345678')])
+
+How to add extra column in users table?
+
+php artisan make:migration add_phone_number_users_table
+
+Then you can simply update it with the following content
+
+Copy
+public function up()
+{
+    Schema::table('users', function (Blueprint $table) {
+        $table->string('phone_number')->nullable(); 
+    });
+}
+
+public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('username', 15)->unique()->after('id');
+            $table->string('lastname', 15)->unique()->after('username');
+            $table->string('firstname', 15)->unique()->after('lastname');
+            $table->string('contact')->nullable()->after('email');
+            $table->date('birthday')->after('contact');
+            $table->tinyInteger('status')->default(1)->after('birthday');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('username');
+            $table->dropColumn('lastname');
+            $table->dropColumn('firstname');
+            $table->dropColumn('contact');
+            $table->dropColumn('birthday');
+            $table->dropColumn('status');
+        });
+    }
